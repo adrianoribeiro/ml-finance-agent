@@ -55,3 +55,31 @@ Após rodar o notebook 03, visualize os experimentos com:
 ```bash
 mlflow ui --backend-store-uri sqlite:///mlflow.db
 ```
+
+## Agente
+
+Crie um `.env` na raiz com sua chave do OpenRouter:
+
+```
+OPENROUTER_API_KEY=sk-or-...
+```
+
+Testar no terminal:
+
+```bash
+python3 -c "from src.agent.react_agent import chat; print(chat('Qual o risco de um cliente de 30 anos com renda 2000?'))"
+```
+
+Subir a API:
+
+```bash
+uvicorn src.serving.app:app --reload
+```
+
+Testar a API:
+
+```bash
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Qual o risco de um cliente de 30 anos com renda 2000?"}'
+```
