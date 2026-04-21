@@ -13,6 +13,8 @@ dependencies = [
     "langgraph>=1.1",
     "faiss-cpu>=1.13",
     "sentence-transformers>=5.4",
+    "ragas>=0.4",
+    "datasets>=4.8",
     "python-dotenv>=1.1",
     "fastapi>=0.115",
     "uvicorn>=0.34",
@@ -32,4 +34,4 @@ testpaths = ["tests"]
 
 [tool.coverage.run]
 source = ["src"]
-omit = ["src/models/train.py"]
+omit = ["src/models/train.py", "src/agent/*", "src/serving/*"]

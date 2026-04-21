@@ -1,4 +1,3 @@
-import numpy as np
 import torch
 from src.models.baseline import get_logistic_regression, get_random_forest, CreditMLP
 

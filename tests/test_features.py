@@ -1,4 +1,3 @@
-import pandas as pd
 from src.features.feature_engineering import (
     remove_invalid_ages,
     fill_missing,

@@ -1,0 +1,90 @@
+[
+  {
+    "query": "Qual a taxa de default no dataset?",
+    "expected_answer": "A taxa de default é 6.68%, ou seja, 10.025 clientes de 149.986 deram calote."
+  },
+  {
+    "query": "Quantos clientes tem no dataset?",
+    "expected_answer": "O dataset contém 149.986 clientes."
+  },
+  {
+    "query": "Qual a renda média dos clientes que dão calote?",
+    "expected_answer": "A renda média dos clientes inadimplentes é de aproximadamente 5.593."
+  },
+  {
+    "query": "Qual a renda média dos clientes que pagam em dia?",
+    "expected_answer": "A renda média dos clientes adimplentes é de aproximadamente 6.478."
+  },
+  {
+    "query": "Qual a idade média dos inadimplentes?",
+    "expected_answer": "A idade média dos inadimplentes é de aproximadamente 46 anos, mais jovens que os adimplentes."
+  },
+  {
+    "query": "O que significa RevolvingUtilizationOfUnsecuredLines?",
+    "expected_answer": "É a razão entre o saldo total em cartões de crédito e linhas de crédito pessoais dividido pela soma dos limites de crédito. Valores acima de 1.0 indicam que o cliente está acima do limite."
+  },
+  {
+    "query": "O que é DebtRatio?",
+    "expected_answer": "DebtRatio é a razão entre os pagamentos mensais de dívidas, pensão alimentícia e custos de vida divididos pela renda bruta mensal."
+  },
+  {
+    "query": "O que significa has_severe_late?",
+    "expected_answer": "É um indicador binário que vale 1 se o cliente teve pelo menos um atraso de 90 dias ou mais, e 0 caso contrário. É o preditor mais forte de default."
+  },
+  {
+    "query": "Quais são os indicadores de alto risco?",
+    "expected_answer": "Os indicadores de alto risco são: histórico de atrasos, renda baixa, alto debt ratio, idade jovem e alta utilização de crédito rotativo."
+  },
+  {
+    "query": "Qual o risco de um cliente de 25 anos com renda 2000 e 3 atrasos?",
+    "expected_answer": "Risco ALTO, com probabilidade de default acima de 60%."
+  },
+  {
+    "query": "Qual o risco de um cliente de 60 anos com renda 10000 e sem atrasos?",
+    "expected_answer": "Risco BAIXO, com probabilidade de default abaixo de 30%."
+  },
+  {
+    "query": "Qual o risco de um cliente de 40 anos com renda 5000 e 1 atraso?",
+    "expected_answer": "Risco MÉDIO, com probabilidade de default entre 30% e 60%."
+  },
+  {
+    "query": "Por que atrasos de pagamento aumentam o risco?",
+    "expected_answer": "Atrasos de pagamento são o indicador mais forte de default. Um único atraso de 90+ dias aumenta a probabilidade de default de 4% para 35%."
+  },
+  {
+    "query": "O que é income_missing?",
+    "expected_answer": "É um indicador que vale 1 se a renda mensal do cliente estava originalmente ausente nos dados, e 0 se estava presente. Renda ausente pode indicar emprego informal."
+  },
+  {
+    "query": "Qual o percentual de inadimplentes com atraso de pagamento?",
+    "expected_answer": "Aproximadamente 54% dos inadimplentes têm histórico de atraso, contra apenas 18% dos adimplentes."
+  },
+  {
+    "query": "Qual modelo é usado para prever risco?",
+    "expected_answer": "O modelo utilizado é Logistic Regression com class_weight balanced para lidar com o desbalanceamento das classes."
+  },
+  {
+    "query": "Explica os fatores de risco de um cliente jovem com baixa renda.",
+    "expected_answer": "Idade jovem aumenta o risco pois está abaixo da mediana de 52 anos. Renda baixa aumenta o risco pois está abaixo da mediana de 5400. Ambos são fatores que contribuem para maior probabilidade de default."
+  },
+  {
+    "query": "Qual a mediana de renda no dataset?",
+    "expected_answer": "A mediana de renda mensal é 5400."
+  },
+  {
+    "query": "Qual a mediana de idade no dataset?",
+    "expected_answer": "A mediana de idade é 52 anos."
+  },
+  {
+    "query": "O que é total_late_payments?",
+    "expected_answer": "É a soma de todos os atrasos de pagamento: 30-59 dias, 60-89 dias e 90+ dias. Combina três colunas correlacionadas em uma só."
+  },
+  {
+    "query": "Um cliente com DebtRatio de 0.9 é arriscado?",
+    "expected_answer": "Um DebtRatio de 0.9 significa que 90% da renda vai para dívidas, o que é alto e contribui para aumentar o risco de default."
+  },
+  {
+    "query": "Qual a diferença entre has_late_payment e has_severe_late?",
+    "expected_answer": "has_late_payment indica qualquer atraso (30+ dias), enquanto has_severe_late indica apenas atrasos graves de 90+ dias. has_severe_late é um preditor mais forte de default."
+  }
+]
