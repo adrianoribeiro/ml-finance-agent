@@ -6,7 +6,11 @@ import numpy as np
 import pandas as pd
 from langchain.tools import tool
 
+from src.agent.rag_pipeline import RAGRetriever
+
 logger = logging.getLogger(__name__)
+
+_retriever = RAGRetriever()
 
 # Load model, scaler and feature names once
 _model = joblib.load("models/credit_model.joblib")
@@ -106,3 +110,16 @@ def explain_decision(features_json: str) -> str:
         )
 
     return "Top factors:\n" + "\n".join(explanations)
+
+
+@tool
+def search_docs(query: str) -> str:
+    """Search the project documentation for information about features, data dictionary,
+    credit risk concepts, or model details. Use this when the user asks about what a
+    feature means, how the data was collected, or domain-specific questions.
+    Input is a natural language query.
+    """
+    results = _retriever.search(query, k=3)
+    if not results:
+        return "No relevant documents found."
+    return "\n\n---\n\n".join(results)

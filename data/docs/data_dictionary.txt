@@ -1,0 +1,45 @@
+Credit Risk Dataset - Data Dictionary
+
+SeriousDlqin2yrs: Target variable. Person experienced 90 days past due delinquency or worse. Binary: 1 = defaulted, 0 = paid.
+
+RevolvingUtilizationOfUnsecuredLines: Total balance on credit cards and personal lines of credit divided by the sum of credit limits. Values above 1.0 mean the client is over their credit limit.
+
+age: Age of the borrower in years.
+
+NumberOfTime30-59DaysPastDueNotWorse: Number of times borrower has been 30-59 days past due but no worse in the last 2 years.
+
+DebtRatio: Monthly debt payments, alimony, living costs divided by monthly gross income.
+
+MonthlyIncome: Monthly gross income in dollars.
+
+NumberOfOpenCreditLinesAndLoans: Number of open loans (installment like car loans or mortgage) and lines of credit (e.g. credit cards).
+
+NumberOfTimes90DaysLate: Number of times borrower has been 90 days or more past due.
+
+NumberRealEstateLoansOrLines: Number of mortgage and real estate loans including home equity lines of credit.
+
+NumberOfTime60-89DaysPastDueNotWorse: Number of times borrower has been 60-89 days past due but no worse in the last 2 years.
+
+NumberOfDependents: Number of dependents in family excluding themselves (spouse, children etc.)
+
+Engineered Features:
+
+income_missing: Flag indicating whether MonthlyIncome was originally missing (1 = missing, 0 = present). Missing income may indicate informal employment or unwillingness to disclose.
+
+total_late_payments: Sum of all late payment counts (30-59 days + 60-89 days + 90+ days). Combines three correlated columns into one.
+
+has_late_payment: Binary flag, 1 if the client has any late payment history, 0 otherwise.
+
+has_severe_late: Binary flag, 1 if the client has been 90+ days late at least once, 0 otherwise. Severe late payments are the strongest predictor of default.
+
+Credit Risk Analysis Guidelines:
+
+High risk indicators: late payment history, low income, high debt ratio, young age, high revolving utilization.
+
+Low risk indicators: no late payments, higher income, low debt ratio, older age, low revolving utilization.
+
+Default rate in the dataset is 6.68% (10,025 out of 149,986 clients).
+
+A single 90+ day late payment increases default probability from 4% to 35%.
+
+The model uses Logistic Regression with balanced class weights to handle the imbalanced dataset (93% paid vs 7% defaulted).

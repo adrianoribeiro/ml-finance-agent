@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import create_react_agent
 
-from src.agent.tools import predict_risk, query_data, explain_decision
+from src.agent.tools import predict_risk, query_data, explain_decision, search_docs
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ def create_agent():
         temperature=0,
     )
 
-    tools = [predict_risk, query_data, explain_decision]
+    tools = [predict_risk, query_data, explain_decision, search_docs]
 
     return create_react_agent(llm, tools, prompt=SYSTEM_PROMPT)
 
