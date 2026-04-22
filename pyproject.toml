@@ -15,6 +15,7 @@ dependencies = [
     "sentence-transformers>=5.4",
     "ragas>=0.4",
     "datasets>=4.8",
+    "evidently>=0.7",
     "python-dotenv>=1.1",
     "fastapi>=0.115",
     "uvicorn>=0.34",
