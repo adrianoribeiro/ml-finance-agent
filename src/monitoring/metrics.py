@@ -37,7 +37,7 @@ def get_metrics() -> dict:
 
     avg_latency = 0
     if latencies:
-        avg_latency = sum(l["duration_ms"] for l in latencies) / len(latencies)
+        avg_latency = sum(entry["duration_ms"] for entry in latencies) / len(latencies)
 
     return {
         "uptime_seconds": round(time.time() - _start_time, 1),
