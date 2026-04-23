@@ -5,8 +5,12 @@ from pydantic import BaseModel
 
 from src.agent.react_agent import chat
 from src.monitoring.metrics import record_latency, get_metrics
+from src.security.guardrails import InputGuardrail, OutputGuardrail
 
 app = FastAPI(title="Credit Risk Agent")
+
+input_guard = InputGuardrail()
+output_guard = OutputGuardrail()
 
 
 class ChatRequest(BaseModel):
@@ -19,10 +23,18 @@ class ChatResponse(BaseModel):
 
 @app.post("/chat", response_model=ChatResponse)
 def chat_endpoint(request: ChatRequest):
+    # Validate input
+    is_valid, reason = input_guard.validate(request.message)
+    if not is_valid:
+        return ChatResponse(response=reason)
+
     start = time.time()
     result = chat(request.message)
     duration = (time.time() - start) * 1000
     record_latency("/chat", duration)
+
+    # Sanitize output
+    result = output_guard.sanitize(result)
     return ChatResponse(response=result)
 
 
