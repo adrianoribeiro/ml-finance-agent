@@ -1,0 +1,4 @@
+[core]
+    remote = s3
+['remote "s3"']
+    url = s3://fiap-ml-finance-agent-data-652099911248-sa-east-1-an/dvc

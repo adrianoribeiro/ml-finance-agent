@@ -45,7 +45,8 @@ ml-finance-agent/
 ├── tests/                           # pytest (27 tests, 83% coverage)
 ├── evaluation/
 │   ├── ragas_eval.py                # RAGAS: 4 metrics
-│   └── llm_judge.py                 # LLM-as-judge: 3 criteria
+│   ├── llm_judge.py                 # LLM-as-judge: 3 criteria
+│   └── benchmark.py                 # Benchmark: 3 agent configurations
 ├── notebooks/
 │   ├── 01_eda.ipynb                 # Exploratory data analysis
 │   ├── 02_feature_engineering.ipynb # Feature engineering pipeline
@@ -58,8 +59,14 @@ ml-finance-agent/
 │   └── golden_set/                  # 22 evaluation pairs
 ├── docs/
 │   ├── PLAN.md                      # Development roadmap
+│   ├── MODEL_CARD.md                # Model documentation
+│   ├── SYSTEM_CARD.md               # System documentation
+│   ├── LGPD_PLAN.md                 # LGPD compliance plan
 │   ├── OWASP_MAPPING.md             # 6 threats mapped
 │   └── RED_TEAM_REPORT.md           # 6 adversarial scenarios
+├── Dockerfile                       # Container image
+├── docker-compose.yml               # Local orchestration
+├── dvc.yaml                         # Data versioning pipeline
 └── .github/workflows/ci.yml        # CI/CD: lint + tests
 ```
 
@@ -78,6 +85,8 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 ```
+
+Download the data files from [Google Drive](https://drive.google.com/drive/folders/1vVLErlh3Z7MEFfWREjDQ1wn4NbWjWM1A) and place them in `data/raw/` and `data/processed/`.
 
 Run notebooks in order (01, 02, 03, 04):
 
@@ -118,6 +127,16 @@ curl -X POST http://localhost:8000/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "Qual o risco de um cliente de 30 anos com renda 2000?"}'
 ```
+
+## Docker
+
+```bash
+docker compose up --build
+```
+
+## Dashboard
+
+With the API running, open `http://localhost:8000/dashboard` to see operational metrics (latency, predictions, risk distribution).
 
 ## Tests
 
