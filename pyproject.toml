@@ -35,4 +35,4 @@ testpaths = ["tests"]
 
 [tool.coverage.run]
 source = ["src"]
-omit = ["src/models/train.py", "src/agent/*", "src/serving/*"]
+omit = ["src/models/train.py", "src/agent/*", "src/serving/*", "src/monitoring/*"]

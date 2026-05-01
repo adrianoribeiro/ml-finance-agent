@@ -1,0 +1,9 @@
+stages:
+  feature_engineering:
+    cmd: python3 -c "from src.features.feature_engineering import compute_features; df = compute_features('data/raw/cs-training.csv'); df.to_csv('data/processed/credit_risk_clean.csv', index=False)"
+    deps:
+      - data/raw/cs-training.csv
+      - src/features/feature_engineering.py
+    outs:
+      - data/processed/credit_risk_clean.csv:
+          cache: false

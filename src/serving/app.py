@@ -5,7 +5,9 @@ from pydantic import BaseModel
 
 from src.agent.react_agent import chat
 from src.monitoring.metrics import record_latency, get_metrics
+from fastapi.responses import HTMLResponse
 from src.security.guardrails import InputGuardrail, OutputGuardrail
+from src.serving.dashboard import DASHBOARD_HTML
 
 app = FastAPI(title="Credit Risk Agent")
 
@@ -46,3 +48,8 @@ def health():
 @app.get("/metrics")
 def metrics():
     return get_metrics()
+
+
+@app.get("/dashboard", response_class=HTMLResponse)
+def dashboard():
+    return DASHBOARD_HTML
