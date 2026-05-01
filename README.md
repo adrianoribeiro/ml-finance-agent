@@ -81,12 +81,32 @@ ml-finance-agent/
 ## Setup
 
 ```bash
+git clone git@github.com:adrianoribeiro/ml-finance-agent.git
+cd ml-finance-agent
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-Download the data files from [Google Drive](https://drive.google.com/drive/folders/1vVLErlh3Z7MEFfWREjDQ1wn4NbWjWM1A) and place them in `data/raw/` and `data/processed/`.
+### Data (DVC + S3)
+
+The dataset is versioned with DVC and stored in S3. To download:
+
+1. Configure AWS credentials (ask the team for the access key):
+```bash
+aws configure
+# AWS Access Key ID: <provided by team>
+# AWS Secret Access Key: <provided by team>
+# Default region: sa-east-1
+# Default output: json
+```
+
+2. Pull the data:
+```bash
+dvc pull
+```
+
+This will download the files to `data/raw/` and `data/processed/`.
 
 Run notebooks in order (01, 02, 03, 04):
 
