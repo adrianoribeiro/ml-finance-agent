@@ -63,7 +63,7 @@ def build_index(docs_dir: str = DOCS_DIR):
 
 class RAGRetriever:
     def __init__(self):
-        if not os.path.exists(INDEX_PATH):
+        if not os.path.exists(INDEX_PATH) or not os.path.exists(CHUNKS_PATH):
             build_index()
 
         self.index = faiss.read_index(INDEX_PATH)
