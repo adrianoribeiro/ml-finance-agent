@@ -36,7 +36,7 @@ ml-finance-agent/
 │   │   ├── tools.py                 # predict_risk, query_data, explain_decision, search_docs
 │   │   └── rag_pipeline.py          # FAISS vector store + sentence-transformers
 │   ├── serving/
-│   │   └── app.py                   # FastAPI endpoints (/chat, /health, /metrics)
+│   │   └── app.py                   # FastAPI endpoints (/chat, /health, /metrics, /dashboard)
 │   ├── monitoring/
 │   │   ├── drift.py                 # PSI-based drift detection
 │   │   └── metrics.py               # Operational metrics (latency, predictions)
@@ -53,10 +53,11 @@ ml-finance-agent/
 │   ├── 03_baseline_model.ipynb      # LogReg + RandomForest baselines
 │   └── 04_mlp_pytorch.ipynb         # MLP neural network
 ├── data/
-│   ├── raw/                         # Original dataset
-│   ├── processed/                   # Clean dataset (149,986 x 12)
+│   ├── raw/                         # Original dataset (DVC)
+│   ├── processed/                   # Clean dataset (DVC)
 │   ├── docs/                        # Documents for RAG
 │   └── golden_set/                  # 22 evaluation pairs
+├── models/                          # Trained model + scaler + FAISS index (DVC)
 ├── docs/
 │   ├── PLAN.md                      # Development roadmap
 │   ├── MODEL_CARD.md                # Model documentation
@@ -80,6 +81,8 @@ ml-finance-agent/
 
 ## Setup
 
+### 1. Clone and install
+
 ```bash
 git clone git@github.com:adrianoribeiro/ml-finance-agent.git
 cd ml-finance-agent
@@ -88,11 +91,10 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-### Data (DVC + S3)
+### 2. Download data and models (DVC + S3)
 
-The dataset is versioned with DVC and stored in S3. To download:
+Configure AWS credentials (ask the team for the access key):
 
-1. Configure AWS credentials (ask the team for the access key):
 ```bash
 aws configure
 # AWS Access Key ID: <provided by team>
@@ -101,26 +103,15 @@ aws configure
 # Default output: json
 ```
 
-2. Pull the data:
+Pull data and model files:
+
 ```bash
 dvc pull
 ```
 
-This will download the files to `data/raw/` and `data/processed/`.
+This downloads `data/raw/`, `data/processed/` and `models/` (trained model, scaler, FAISS index).
 
-Run notebooks in order (01, 02, 03, 04):
-
-```bash
-jupyter notebook notebooks/
-```
-
-View MLflow experiments:
-
-```bash
-mlflow ui --backend-store-uri sqlite:///mlflow.db
-```
-
-## Agent
+### 3. Configure API key
 
 Create a `.env` file with your OpenRouter key:
 
@@ -128,19 +119,13 @@ Create a `.env` file with your OpenRouter key:
 OPENROUTER_API_KEY=sk-or-...
 ```
 
-Test in terminal:
-
-```bash
-python3 -c "from src.agent.react_agent import chat; print(chat('Qual o risco de um cliente de 30 anos com renda 2000?'))"
-```
-
-Start the API:
+### 4. Run the agent
 
 ```bash
 uvicorn src.serving.app:app --reload
 ```
 
-Test the API:
+Test:
 
 ```bash
 curl -X POST http://localhost:8000/chat \
@@ -148,15 +133,29 @@ curl -X POST http://localhost:8000/chat \
   -d '{"message": "Qual o risco de um cliente de 30 anos com renda 2000?"}'
 ```
 
+Dashboard: http://localhost:8000/dashboard
+
+## Notebooks (optional)
+
+The notebooks document the exploration and training process. Run in order (01, 02, 03, 04):
+
+```bash
+jupyter notebook notebooks/
+```
+
+After running notebooks 03 and 04, view experiments in MLflow:
+
+```bash
+mlflow ui --backend-store-uri sqlite:///mlflow.db
+```
+
+Note: `mlflow.db` is generated locally when you run the notebooks. It is not included in the repository.
+
 ## Docker
 
 ```bash
 docker compose up --build
 ```
-
-## Dashboard
-
-With the API running, open `http://localhost:8000/dashboard` to see operational metrics (latency, predictions, risk distribution).
 
 ## Tests
 
