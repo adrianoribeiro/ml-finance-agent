@@ -5,11 +5,13 @@ import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
+from src.config import Config
+
 logger = logging.getLogger(__name__)
 
-DOCS_DIR = "data/docs"
-INDEX_PATH = "models/faiss_index.bin"
-CHUNKS_PATH = "models/chunks.npy"
+DOCS_DIR = Config.DOCS_DIR
+INDEX_PATH = Config.FAISS_INDEX_PATH
+CHUNKS_PATH = Config.CHUNKS_PATH
 
 
 def load_and_chunk(docs_dir: str, chunk_size: int = 300) -> list[str]:
@@ -44,7 +46,7 @@ def build_index(docs_dir: str = DOCS_DIR):
     chunks = load_and_chunk(docs_dir)
     logger.info(f"Loaded {len(chunks)} chunks from {docs_dir}")
 
-    model = SentenceTransformer("all-MiniLM-L6-v2")
+    model = SentenceTransformer(Config.EMBEDDING_MODEL)
     embeddings = model.encode(chunks, show_progress_bar=False)
     embeddings = np.array(embeddings, dtype="float32")
 
@@ -66,7 +68,7 @@ class RAGRetriever:
 
         self.index = faiss.read_index(INDEX_PATH)
         self.chunks = list(np.load(CHUNKS_PATH, allow_pickle=True))
-        self.model = SentenceTransformer("all-MiniLM-L6-v2")
+        self.model = SentenceTransformer(Config.EMBEDDING_MODEL)
 
     def search(self, query: str, k: int = 3) -> list[str]:
         embedding = self.model.encode([query]).astype("float32")

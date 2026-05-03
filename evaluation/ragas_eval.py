@@ -1,10 +1,8 @@
 """Evaluate RAG pipeline with RAGAS metrics."""
 import json
 import logging
-import os
 
 from datasets import Dataset
-from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from ragas import evaluate
 from ragas.llms import LangchainLLMWrapper
@@ -17,17 +15,17 @@ from ragas.metrics import (
 
 from src.agent.react_agent import chat
 from src.agent.rag_pipeline import RAGRetriever
+from src.config import Config
 
-load_dotenv()
 logger = logging.getLogger(__name__)
 
 
-def load_golden_set(path: str = "data/golden_set/golden_set.json") -> list[dict]:
+def load_golden_set(path: str = Config.GOLDEN_SET_PATH) -> list[dict]:
     with open(path) as f:
         return json.load(f)
 
 
-def run_evaluation(golden_set_path: str = "data/golden_set/golden_set.json") -> dict:
+def run_evaluation(golden_set_path: str = Config.GOLDEN_SET_PATH) -> dict:
     golden_set = load_golden_set(golden_set_path)
     retriever = RAGRetriever()
 
@@ -52,10 +50,10 @@ def run_evaluation(golden_set_path: str = "data/golden_set/golden_set.json") -> 
     dataset = Dataset.from_list(results)
 
     llm = ChatOpenAI(
-        model="openai/gpt-4o-mini",
-        api_key=os.getenv("OPENROUTER_API_KEY"),
-        base_url="https://openrouter.ai/api/v1",
-        temperature=0,
+        model=Config.LLM_MODEL,
+        api_key=Config.OPENROUTER_API_KEY,
+        base_url=Config.LLM_BASE_URL,
+        temperature=Config.LLM_TEMPERATURE,
     )
     evaluator_llm = LangchainLLMWrapper(llm)
 

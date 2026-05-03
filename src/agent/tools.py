@@ -7,16 +7,17 @@ import pandas as pd
 from langchain.tools import tool
 
 from src.agent.rag_pipeline import RAGRetriever
+from src.config import Config
 
 logger = logging.getLogger(__name__)
 
 _retriever = RAGRetriever()
 
 # Load model, scaler and feature names once
-_model = joblib.load("models/credit_model.joblib")
-_scaler = joblib.load("models/scaler.joblib")
-_feature_names = joblib.load("models/feature_names.joblib")
-_df = pd.read_csv("data/processed/credit_risk_clean.csv")
+_model = joblib.load(Config.MODEL_PATH)
+_scaler = joblib.load(Config.SCALER_PATH)
+_feature_names = joblib.load(Config.FEATURE_NAMES_PATH)
+_df = pd.read_csv(Config.DATA_PATH)
 
 
 @tool

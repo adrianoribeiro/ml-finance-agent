@@ -1,34 +1,22 @@
 """Benchmark agent with different configurations."""
 import json
 import logging
-import os
 import time
 
-from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import create_react_agent
 
 from src.agent.tools import predict_risk, query_data, explain_decision, search_docs
+from src.config import Config
 
-load_dotenv()
 logger = logging.getLogger(__name__)
 
+_model = Config.LLM_MODEL
+
 CONFIGS = [
-    {
-        "name": "gpt-4o-mini-t0",
-        "model": "openai/gpt-4o-mini",
-        "temperature": 0,
-    },
-    {
-        "name": "gpt-4o-mini-t05",
-        "model": "openai/gpt-4o-mini",
-        "temperature": 0.5,
-    },
-    {
-        "name": "gpt-4o-mini-t10",
-        "model": "openai/gpt-4o-mini",
-        "temperature": 1.0,
-    },
+    {"name": f"{_model}-t0", "model": _model, "temperature": 0},
+    {"name": f"{_model}-t05", "model": _model, "temperature": 0.5},
+    {"name": f"{_model}-t10", "model": _model, "temperature": 1.0},
 ]
 
 TEST_QUERIES = [
@@ -49,8 +37,8 @@ def run_benchmark() -> list[dict]:
 
         llm = ChatOpenAI(
             model=config["model"],
-            api_key=os.getenv("OPENROUTER_API_KEY"),
-            base_url="https://openrouter.ai/api/v1",
+            api_key=Config.OPENROUTER_API_KEY,
+            base_url=Config.LLM_BASE_URL,
             temperature=config["temperature"],
         )
 

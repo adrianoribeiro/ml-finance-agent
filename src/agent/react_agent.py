@@ -1,13 +1,11 @@
 import logging
-import os
 
-from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import create_react_agent
 
 from src.agent.tools import predict_risk, query_data, explain_decision, search_docs
+from src.config import Config
 
-load_dotenv()
 logger = logging.getLogger(__name__)
 
 SYSTEM_PROMPT = (
@@ -20,10 +18,10 @@ SYSTEM_PROMPT = (
 
 def create_agent():
     llm = ChatOpenAI(
-        model="openai/gpt-4o-mini",
-        api_key=os.getenv("OPENROUTER_API_KEY"),
-        base_url="https://openrouter.ai/api/v1",
-        temperature=0,
+        model=Config.LLM_MODEL,
+        api_key=Config.OPENROUTER_API_KEY,
+        base_url=Config.LLM_BASE_URL,
+        temperature=Config.LLM_TEMPERATURE,
     )
 
     tools = [predict_risk, query_data, explain_decision, search_docs]

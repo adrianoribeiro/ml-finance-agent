@@ -23,9 +23,17 @@ help: ## Show this help message
 	@echo ""
 	@echo "  \033[36msetup\033[0m         Alias for install — same behaviour."
 	@echo ""
+	@echo "  \033[36mactivate\033[0m      Print the command to activate the virtual environment."
+	@echo "                  Run: eval \$$(make activate)  — or copy the printed command."
+	@echo ""
 	@echo "  \033[36menv\033[0m           Create a .env file with a placeholder OPENROUTER_API_KEY."
 	@echo "                  Required before running the server or evaluation."
 	@echo "                  Skipped if .env already exists."
+	@echo ""
+	@echo "\033[1;33m▶ DATA\033[0m"
+	@echo "  \033[36mdvc-pull\033[0m      Pull data from S3 using DVC."
+	@echo "                  Requires AWS credentials (aws configure) and dvc[s3] installed."
+	@echo "                  Downloads files to data/raw/ and data/processed/."
 	@echo ""
 	@echo "\033[1;33m▶ CODE QUALITY\033[0m"
 	@echo "  \033[36mlint\033[0m          Lint src/ and tests/ with ruff (same check as CI)."
@@ -97,7 +105,7 @@ help: ## Show this help message
 	@echo "                  Run 'make install' afterwards to recreate the environment."
 	@echo ""
 	@echo "─────────────────────────────────────────────────────────────────────────────"
-	@echo "  \033[2mFirst time?\033[0m  make install → make env → make notebooks → make serve"
+	@echo "  \033[2mFirst time?\033[0m  make install → make env → make dvc-pull → make notebooks → make serve"
 	@echo "─────────────────────────────────────────────────────────────────────────────"
 	@echo ""
 
@@ -126,6 +134,10 @@ setup: venv ## Alias for install — create .venv/ and install all dependencies
 	@echo ""
 	@echo "Setup complete. Activate the environment with: source $(VENV)/bin/activate"
 
+.PHONY: activate
+activate: ## Print the venv activation command (use: eval $(make activate))
+	@echo "source $(VENV)/bin/activate"
+
 .PHONY: env
 env: ## Create a .env file with placeholder OPENROUTER_API_KEY (skipped if exists)
 	@if [ -f .env ]; then \
@@ -134,6 +146,14 @@ env: ## Create a .env file with placeholder OPENROUTER_API_KEY (skipped if exist
 		echo "OPENROUTER_API_KEY=sk-or-..." > .env; \
 		echo ".env created. Replace the placeholder with your real OpenRouter API key."; \
 	fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Data
+# ─────────────────────────────────────────────────────────────────────────────
+
+.PHONY: dvc-pull
+dvc-pull: ## Pull data from S3 with DVC (requires aws configure and dvc[s3])
+	dvc pull
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Code Quality

@@ -1,14 +1,12 @@
 """LLM-as-judge: evaluate agent responses on 3+ criteria."""
 import json
 import logging
-import os
 
-from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 
 from src.agent.react_agent import chat
+from src.config import Config
 
-load_dotenv()
 logger = logging.getLogger(__name__)
 
 JUDGE_PROMPT = """You are evaluating a credit risk analysis assistant.
@@ -31,10 +29,10 @@ Agent response: {response}
 
 def judge_response(question: str, expected: str, response: str) -> dict:
     llm = ChatOpenAI(
-        model="openai/gpt-4o-mini",
-        api_key=os.getenv("OPENROUTER_API_KEY"),
-        base_url="https://openrouter.ai/api/v1",
-        temperature=0,
+        model=Config.LLM_MODEL,
+        api_key=Config.OPENROUTER_API_KEY,
+        base_url=Config.LLM_BASE_URL,
+        temperature=Config.LLM_TEMPERATURE,
     )
 
     prompt = JUDGE_PROMPT.format(
@@ -48,7 +46,7 @@ def judge_response(question: str, expected: str, response: str) -> dict:
         return {"accuracy": 0, "clarity": 0, "completeness": 0, "reasoning": result.content}
 
 
-def run_judge(golden_set_path: str = "data/golden_set/golden_set.json") -> dict:
+def run_judge(golden_set_path: str = Config.GOLDEN_SET_PATH) -> dict:
     with open(golden_set_path) as f:
         golden_set = json.load(f)
 
