@@ -3,8 +3,10 @@ import json
 import logging
 
 from datasets import Dataset
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_openai import ChatOpenAI
 from ragas import evaluate
+from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.llms import LangchainLLMWrapper
 from ragas.metrics import (
     Faithfulness,
@@ -57,20 +59,29 @@ def run_evaluation(golden_set_path: str = Config.GOLDEN_SET_PATH) -> dict:
     )
     evaluator_llm = LangchainLLMWrapper(llm)
 
+    hf_embeddings = HuggingFaceEmbeddings(model_name=Config.EMBEDDING_MODEL)
+    evaluator_embeddings = LangchainEmbeddingsWrapper(hf_embeddings)
+
     metrics = [
         Faithfulness(llm=evaluator_llm),
-        ResponseRelevancy(llm=evaluator_llm),
+        ResponseRelevancy(llm=evaluator_llm, embeddings=evaluator_embeddings),
         LLMContextPrecisionWithoutReference(llm=evaluator_llm),
         LLMContextRecall(llm=evaluator_llm),
     ]
 
-    scores = evaluate(dataset=dataset, metrics=metrics)
+    scores = evaluate(dataset=dataset, metrics=metrics, embeddings=evaluator_embeddings)
+
+    def _mean(v):
+        if isinstance(v, list):
+            valid = [x for x in v if x is not None]
+            return float(sum(valid) / len(valid)) if valid else 0.0
+        return float(v)
 
     result = {
-        "faithfulness": float(scores["faithfulness"]),
-        "answer_relevancy": float(scores["response_relevancy"]),
-        "context_precision": float(scores["llm_context_precision_without_reference"]),
-        "context_recall": float(scores["context_recall"]),
+        "faithfulness": _mean(scores["faithfulness"]),
+        "answer_relevancy": _mean(scores["answer_relevancy"]),
+        "context_precision": _mean(scores["llm_context_precision_without_reference"]),
+        "context_recall": _mean(scores["context_recall"]),
     }
 
     logger.info(f"RAGAS scores: {result}")

@@ -19,3 +19,4 @@ mlruns/
 mlflow.db
 *.png
 !docs/*.png
+models/faiss_index.bin
