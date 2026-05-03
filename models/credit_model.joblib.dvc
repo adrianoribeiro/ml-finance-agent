@@ -1,0 +1,5 @@
+outs:
+- md5: f483164e08452c0e181a33a0d212254a
+  size: 959
+  hash: md5
+  path: credit_model.joblib

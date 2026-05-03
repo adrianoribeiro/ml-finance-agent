@@ -1,0 +1,5 @@
+outs:
+- md5: 4da83e2e5f6dc5aeaff4e04f78d9d205
+  size: 2625
+  hash: md5
+  path: chunks.npy
